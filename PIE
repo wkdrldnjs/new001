@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> 피자!!!!!! </title>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable(<?php
+                $servername = "localhost";
+                $username = "your_username";
+                $password = "your_password";
+                $dbname = "pizza";
+
+                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                $conn->set_charset("utf8");
+
+                $sql = "SELECT toppings, COUNT(*) as count FROM pizzas GROUP BY toppings";
+                $result = $conn->query($sql);
+
+                $data = array();
+                while ($row = $result->fetch_assoc()) {
+                    $data[] = array($row['toppings'], (int)$row['count']);
+                }
+
+                $data = array_merge(array(array('Toppings', 'Count')), $data);
+
+                echo json_encode($data);
+            ?>);
+
+            var options = {
+                title: 'Pizza Toppings'
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+        }
+    </script>
+</head>
+<body>
+    <div id="piechart" style="width: 900px; height: 500px;"></div>
+</body>
+</html>
