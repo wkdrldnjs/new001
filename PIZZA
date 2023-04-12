@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> 피자!!!!!! </title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>피자 선택</h1>
+    <form method="post" action="">
+        <label for="size">피자 사이즈:</label>
+        <input type="text" name="size" id="size"><br><br>
+        <label for="toppings">토핑:</label>
+        <input type="text" name="toppings" id="toppings"><br><br>
+        <label for="bread_type">빵 종류:</label>
+        <input type="text" name="bread_type" id="bread_type"><br><br>
+        <label for="cheese_amount">치즈 양:</label>
+        <input type="text" name="cheese_amount" id="cheese_amount"><br><br>
+        <label for="edge">엣지:</label>
+        <input type="text" name="edge" id="edge"><br><br>
+        <input type="submit" name="submit" value="Submit">
+    </form>
+<?php
+    if(isset($_POST['submit'])){
+        // Retrieve data from form
+        $size = $_POST['size'];
+        $toppings = $_POST['toppings'];
+        $bread_type = $_POST['bread_type'];
+        $cheese_amount = $_POST['cheese_amount'];
+        $edge = $_POST['edge'];
+
+    // Connect to MySQL database
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "pizza";
+
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    // Set character set to UTF-8
+    $conn->set_charset("utf8");
+
+    // Insert data into database
+    $sql = "INSERT INTO pizzas (size, toppings, bread_type, cheese_amount, edge) VALUES ('$size', '$toppings', '$bread_type', '$cheese_amount', '$edge')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "피자 데이터 입력 완료!";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $conn->close();
+}
+?>
+
+</body>
+</html>
